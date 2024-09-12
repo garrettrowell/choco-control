@@ -33,5 +33,9 @@ node default {
       log_output             => true,
       #choco_install_location => 'C:\Some Path',
     }
+
+    package { ['notepadplusplus', 'googlechrome']:
+      ensure => installed,
+    }
   }
 }
