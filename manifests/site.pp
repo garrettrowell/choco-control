@@ -34,7 +34,7 @@ node default {
       #choco_install_location => 'C:\Some Path',
     }
 
-    package { ['notepadplusplus', 'googlechrome']:
+    package { ['notepadplusplus', 'firefox']:
       ensure => installed,
     }
   }
