@@ -31,7 +31,7 @@ node default {
   if $facts['os']['family'] == 'windows' {
     class { 'chocolatey':
       log_output             => true,
-      choco_install_location => 'C:/Program Files/chocolatey',
+      choco_install_location => 'C:\Program%20Files\chocolatey',
     }
 
     package { ['notepadplusplus', 'firefox']:
