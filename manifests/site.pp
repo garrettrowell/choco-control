@@ -32,6 +32,7 @@ node default {
     class { 'chocolatey':
       log_output             => true,
       choco_install_location => 'C:\Program Files\chocolatey',
+      install_proxy          => 'https://something.com',
     }
 
     package { ['notepadplusplus', 'firefox']:
