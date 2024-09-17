@@ -21,7 +21,7 @@ mod 'chocolatey',
   branch: 'main'
 
 mod 'puppetlabs-stdlib', '9.6.0'
-#mod 'puppetlabs-powershell', '6.0.0'
+mod 'puppetlabs-powershell', '6.0.0'
 #mod 'powershell',
 #  git: 'git@github.com:garrettrowell/puppetlabs-powershell.git',
 #  branch: 'testing'
