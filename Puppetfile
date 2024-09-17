@@ -18,7 +18,7 @@ forge 'https://forge.puppet.com'
 #
 mod 'chocolatey',
   git: 'git@github.com:garrettrowell/puppetlabs-chocolatey.git',
-  branch: 'main'
+  branch: 'install_location_fix'
 
 mod 'puppetlabs-stdlib', '9.6.0'
 mod 'puppetlabs-powershell', '6.0.0'
