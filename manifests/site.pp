@@ -34,8 +34,8 @@ node default {
       choco_install_location => 'C:\Program Files\chocolatey',
     }
 
-    #    package { ['notepadplusplus', 'firefox']:
-    #      ensure => installed,
-    #    }
+    package { ['notepadplusplus', 'firefox']:
+      ensure => installed,
+    }
   }
 }
