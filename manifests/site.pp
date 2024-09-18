@@ -35,6 +35,7 @@ node default {
       install_proxy          => 'http://172.31.64.151:3128',
       install_proxy_user     => 'atest',
       install_proxy_password => Sensitive('testing'),
+      use_7zip               => true,
       #      ignore_proxy    => true,
     }
 
