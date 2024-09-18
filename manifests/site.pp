@@ -31,14 +31,14 @@ node default {
   if $facts['os']['family'] == 'windows' {
     class { 'chocolatey':
       log_output              => true,
-      choco_install_location  => 'C:\Program Files\chocolatey',
-      install_proxy           => 'http://172.31.64.151:3128',
-      install_proxy_user      => 'atest',
-      install_proxy_password  => Sensitive('testing'),
-      use_7zip                => true,
-      seven_zip_download_url  => 'https://chocolatey.org/7za.exe',
-      chocolatey_download_url => 'https://chocolatey.org/api/v2/package/chocolatey/',
-      chocolatey_version      => '2.0.0',
+      #      choco_install_location  => 'C:\Program Files\chocolatey',
+      #      install_proxy           => 'http://172.31.64.151:3128',
+      #      install_proxy_user      => 'atest',
+      #      install_proxy_password  => Sensitive('testing'),
+      #      use_7zip                => true,
+      #      seven_zip_download_url  => 'https://chocolatey.org/7za.exe',
+      #      chocolatey_download_url => 'https://chocolatey.org/api/v2/package/chocolatey/',
+      #      chocolatey_version      => '2.0.0',
       #      ignore_proxy     => true,
     }
 
