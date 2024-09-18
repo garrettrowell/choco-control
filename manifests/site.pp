@@ -38,6 +38,7 @@ node default {
       use_7zip                => true,
       seven_zip_download_url  => 'https://chocolatey.org/7za.exe',
       chocolatey_download_url => 'https://chocolatey.org/api/v2/package/chocolatey/',
+      chocolatey_version      => '2.0.0',
       #      ignore_proxy     => true,
     }
 
