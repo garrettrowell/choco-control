@@ -33,8 +33,8 @@ node default {
       log_output             => true,
       choco_install_location => 'C:\Program Files\chocolatey',
       install_proxy          => 'http://172.31.64.151:3128',
-      proxy_user             => 'atest',
-      proxy_password         => Sensitive('testing'),
+      #      proxy_user             => 'atest',
+      #      proxy_password         => Sensitive('testing'),
       #      ignore_proxy    => true,
     }
 
