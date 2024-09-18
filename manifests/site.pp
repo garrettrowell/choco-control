@@ -32,7 +32,7 @@ node default {
     class { 'chocolatey':
       log_output             => true,
       choco_install_location => 'C:\Program Files\chocolatey',
-      install_proxy          => 'http://172.31.64.151:8080',
+      install_proxy          => 'http://172.31.64.151:3128',
       #      ignore_proxy           => true,
     }
 
