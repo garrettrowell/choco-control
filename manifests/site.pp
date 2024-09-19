@@ -13,8 +13,8 @@
 # https://github.com/puppetlabs/docs-archive/blob/master/pe/2015.3/release_notes.markdown#filebucket-resource-no-longer-created-by-default
 File { backup => false }
 
-# Set chocolatey as default package provider on windows
 if $facts['os']['family'] == 'windows' {
+  # Set chocolatey as default package provider on windows
   Package {
     provider         => chocolatey,
     package_settings => {
@@ -23,6 +23,19 @@ if $facts['os']['family'] == 'windows' {
     },
     require          => Class['chocolatey'],
   }
+
+  # Ensure any config happens after installing chocolatey
+  Class['chocolatey'] -> Chocolateyconfig <||>
+  # Ensure any sources get configured after installing
+  Class['chocolatey'] -> Chocolateysource <||>
+  # Ensure any features get configured after installing
+  Class['chocolatey'] -> Chocolateyfeature <||>
+  # Ensure any chocolatey config happens before any packages using chocolatey
+  Chocolateyconfig <||> -> Package <| provider == 'chocolatey' |>
+  # Ensure any sources get configured before any packages using chocolatey
+  Chocolateysource <||> -> Package <| provider == 'chocolatey' |>
+  # Ensure any features get configured before any packages using chocolatey
+  Chocolateyfeature <||> -> Package <| provider == 'chocolatey' |>
 }
 
 ## Node Definitions ##
@@ -50,9 +63,6 @@ node default {
     }
 
     chocolateyconfig {
-      default:
-        require => Class['chocolatey'],
-      ;
       'proxy':
         value => $proxy,
       ;
@@ -69,7 +79,6 @@ node default {
 
     package { ['notepadplusplus', 'firefox']:
       ensure  => installed,
-      require => Chocolateyconfig['proxy','proxyUser','proxyPassword','cacheLocation'],
     }
   }
 }
