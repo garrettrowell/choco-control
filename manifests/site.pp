@@ -29,12 +29,17 @@ if $facts['os']['family'] == 'windows' {
 
 node default {
   if $facts['os']['family'] == 'windows' {
+
+    $proxy          = 'http://172.31.64.151:3128'
+    $proxy_user     = 'atest'
+    $proxy_password = 'testing'
+
     class { 'chocolatey':
       log_output              => true,
       #      choco_install_location  => 'C:\Program Files\chocolatey',
-      install_proxy           => 'http://172.31.64.151:3128',
-      install_proxy_user      => 'atest',
-      install_proxy_password  => Sensitive('testing'),
+      install_proxy           => $proxy,
+      install_proxy_user      => $proxy_user,
+      install_proxy_password  => Sensitive($proxy_password),
       #      use_7zip                => true,
       #      seven_zip_download_url  => 'https://chocolatey.org/7za.exe',
       #      chocolatey_download_url => 'https://chocolatey.org/api/v2/package/chocolatey/',
@@ -42,8 +47,24 @@ node default {
       #      ignore_proxy     => true,
     }
 
+    chocolateyconfig {
+      default:
+        require => Class['chocolatey'],
+      ;
+      'proxy':
+        value => $proxy,
+      ;
+      'proxyUser':
+        value => $proxy_user,
+      ;
+      'proxyPassword':
+        value => $proxy_password,
+      ;
+    }
+
     package { ['notepadplusplus', 'firefox']:
-      ensure => installed,
+      ensure  => installed,
+      require => Chocolateyconfig['proxy','proxyUser','proxyPassword'],
     }
   }
 }
