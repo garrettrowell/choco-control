@@ -51,10 +51,10 @@ node default {
     class { 'chocolatey':
       log_output                     => true,
       #      choco_install_location  => 'C:\Program Files\chocolatey',
-      install_proxy                  => $proxy,
-      install_proxy_user             => $proxy_user,
-      install_proxy_password         => Sensitive($proxy_password),
-      install_tempdir                => $tempdir,
+      #install_proxy                  => $proxy,
+      #install_proxy_user             => $proxy_user,
+      #install_proxy_password         => Sensitive($proxy_password),
+      #install_tempdir                => $tempdir,
       #      use_7zip                => true,
       #      seven_zip_download_url  => 'https://chocolatey.org/7za.exe',
       #      chocolatey_download_url => 'https://chocolatey.org/api/v2/package/chocolatey/',
@@ -62,20 +62,20 @@ node default {
       #      ignore_proxy            => true,
     }
 
-    chocolateyconfig {
-      'proxy':
-        value => $proxy,
-      ;
-      'proxyUser':
-        value => $proxy_user,
-      ;
-      'proxyPassword':
-        value => $proxy_password,
-      ;
-      'cacheLocation':
-        value => $tempdir,
-      ;
-    }
+    #    chocolateyconfig {
+    #      'proxy':
+    #        value => $proxy,
+    #      ;
+    #      'proxyUser':
+    #        value => $proxy_user,
+    #      ;
+    #      'proxyPassword':
+    #        value => $proxy_password,
+    #      ;
+    #      'cacheLocation':
+    #        value => $tempdir,
+    #      ;
+    #    }
 
     package { ['notepadplusplus', 'firefox']:
       ensure  => installed,
