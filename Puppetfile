@@ -29,7 +29,8 @@ mod 'puppetlabs-powershell', '6.0.0'
 #mod 'puppetlabs-pwshlib', '1.2.0'
 mod 'pwshlib',
   git: 'git@github.com:garrettrowell/ruby-pwsh.git',
-  branch: 'env_vars_spaces'
+  branch: 'main'
+#  branch: 'env_vars_spaces'
 
 mod 'puppetlabs-registry', '5.0.1'
 mod 'puppetlabs-ruby_task_helper', '0.6.1'
