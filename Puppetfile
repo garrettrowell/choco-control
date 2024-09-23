@@ -35,3 +35,4 @@ mod 'pwshlib',
 mod 'puppetlabs-registry', '5.0.1'
 mod 'puppetlabs-ruby_task_helper', '0.6.1'
 mod 'puppetlabs-dsc_lite', '4.1.0'
+mod 'pltraining-dirtree', '0.3.0'
