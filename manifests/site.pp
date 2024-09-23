@@ -84,5 +84,6 @@ node default {
     $tree = dirtree('/tmp/does/not/exist')
     notify { "${tree}": }
 
+    include dropsonde
   }
 }
