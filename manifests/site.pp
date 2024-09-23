@@ -80,5 +80,9 @@ node default {
     package { ['notepadplusplus', 'firefox']:
       ensure  => installed,
     }
+  } else {
+    $tree = dirtree('/tmp/does/not/exist')
+    notify { "${tree}": }
+
   }
 }
