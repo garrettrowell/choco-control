@@ -41,6 +41,7 @@ if $facts['os']['family'] == 'windows' {
 ## Node Definitions ##
 
 node default {
+  include awss3
   if $facts['os']['family'] == 'windows' {
 
     $proxy          = 'http://172.31.64.151:3128'
