@@ -87,8 +87,9 @@ node default {
 
     include dropsonde
     archive { '/tmp/imatest':
-      ensure => present,
-      source => 's3://somebucket/somefile',
+      aws_cli_install => true,
+      ensure          => present,
+      source          => 's3://somebucket/somefile',
     }
   }
 }
