@@ -86,8 +86,12 @@ node default {
     notify { "${tree}": }
 
     include dropsonde
-    archive { '/tmp/imatest':
+
+    class { 'archive':
       aws_cli_install => true,
+    }
+
+    archive { '/tmp/imatest':
       ensure          => present,
       source          => 's3://somebucket/somefile',
     }
