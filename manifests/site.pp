@@ -82,20 +82,25 @@ node default {
       ensure  => installed,
     }
   } else {
-    $tree = dirtree('/tmp/does/not/exist')
-    notify { "${tree}": }
-
-    include dropsonde
-
-    class { 'archive':
-      aws_cli_install => true,
+    s3_get_object { '/tmp/imatest':
+      ensure      => present,
+      bucket_name => 'somebucket',
+      object_key  => 'some_object'
     }
-
-    atest::s3get { 'atest':
-      bucket_name         => 'somebucket',
-      bucket_file         => 'somedir/somefile',
-      local_file_location => '/tmp/imatest'
-    }
+    #    $tree = dirtree('/tmp/does/not/exist')
+    #    notify { "${tree}": }
+    #
+    #    include dropsonde
+    #
+    #    class { 'archive':
+    #      aws_cli_install => true,
+    #    }
+    #
+    #    atest::s3get { 'atest':
+    #      bucket_name         => 'somebucket',
+    #      bucket_file         => 'somedir/somefile',
+    #      local_file_location => '/tmp/imatest'
+    #    }
     #    archive { '/tmp/imatest':
     #      ensure          => present,
     #      source          => 's3://somebucket/somefile',
