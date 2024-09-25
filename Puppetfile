@@ -41,3 +41,4 @@ mod 'puppetlabs-iis', '8.0.1'
 mod 'awss3',
   git: 'git@github.com:garrettrowell/awss3.git',
   branch: 'main'
+mod 'puppet-archive', '7.1.0'
