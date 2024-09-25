@@ -38,3 +38,6 @@ mod 'puppetlabs-dsc_lite', '4.1.0'
 mod 'pltraining-dirtree', '0.3.0'
 mod 'puppetlabs-dropsonde', '0.2.0'
 mod 'puppetlabs-iis', '8.0.1'
+mod 'awss3',
+  git: 'git@github.com:garrettrowell/awss3.git',
+  branch: 'main'
