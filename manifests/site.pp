@@ -91,9 +91,14 @@ node default {
       aws_cli_install => true,
     }
 
-    archive { '/tmp/imatest':
-      ensure          => present,
-      source          => 's3://somebucket/somefile',
+    atest::s3get { 'atest':
+      bucket_name         => 'somebucket',
+      bucket_file         => 'somedir/somefile',
+      local_file_location => '/tmp/imatest'
     }
+    #    archive { '/tmp/imatest':
+    #      ensure          => present,
+    #      source          => 's3://somebucket/somefile',
+    #    }
   }
 }
