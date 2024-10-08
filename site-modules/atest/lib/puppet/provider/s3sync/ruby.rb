@@ -2,7 +2,8 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
   commands :aws => 'aws'
 
   def dry_run(bucket, localpath, connect_timeout, region)
-    if Facter['force_sync'].value.eql? 'true'
+    override = 'true'
+    if override.eql? 'true'
       output = "(dryrun) download: #{bucket}/some.rpm to #{localpath}/some.rpm"
     else
       begin
