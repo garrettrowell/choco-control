@@ -2,20 +2,14 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
   commands :aws => 'aws'
 
   def dry_run(bucket, localpath, connect_timeout, region)
-    override = ''
+    override = 'sync_needed'
     case override
     when 'sync_needed'
       output = "(dryrun) download: #{bucket}/some.rpm to #{localpath}/some.rpm"
     when 'empty'
       output = ''
     else
-      begin
-        output = aws(['s3', 'sync', bucket, localpath, '--exact-timestamps', '--cli-connect-timeout', connect_timeout, '--region', region, '--dryrun'])
-      rescue Puppet::ExecutionFailure => e
-        raise e
-        #Puppet.err(e.message)
-        #return nil
-      end
+      output = aws(['s3', 'sync', bucket, localpath, '--exact-timestamps', '--cli-connect-timeout', connect_timeout, '--region', region, '--dryrun'])
     end
     to_sync = output.split("\n").sort
     # likely need more logic here
@@ -23,11 +17,8 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
   end
 
   def do_sync(bucket, localpath, connect_timeout, region)
-    begin
-      aws(['s3', 'sync', bucket, localpath, '--exact-timestamps', '--cli-connect-timeout', connect_timeout, '--region', region])
-    rescue Puppet::ExecutionFailure => e
-      Puppet.err(e.message)
-    end
+    # This raises a Puppet::ExecutionFailure Puppet.err unless the command returns an exitcode 0
+    aws(['s3', 'sync', bucket, localpath, '--exact-timestamps', '--cli-connect-timeout', connect_timeout, '--region', region])
   end
 
   def exists?
