@@ -8,6 +8,10 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
       Puppet.err(e.message)
       return nil
     end
+
+    if Facter.value('force_sync').eql? 'true'
+      output = "(dryrun) download: #{bucket}/some.rpm to #{localpath}/some.rpm"
+    end
     to_sync = output.split("\n").sort
     # likely need more logic here
     to_sync
@@ -22,11 +26,12 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
   end
 
   def exists?
-    # if --dryrun returns nothing, we are in sync
-    dry_run(resource[:bucket], resource[:localpath], resource[:connect_timeout], resource[:region]) == nil
+    # if dry_run returns an empty array, we are in sync
+    dry_run(resource[:bucket], resource[:localpath], resource[:connect_timeout], resource[:region]).empty?
   end
 
   def create
+    Puppet.info('in create')
     do_sync(resource[:bucket], resource[:localpath], resource[:connect_timeout], resource[:region])
   end
 
