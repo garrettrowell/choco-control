@@ -82,6 +82,10 @@ node default {
       ensure  => installed,
     }
   } else {
+    s3sync { 'atest':
+      localpath => '/tmp/imatest',
+      bucket    => 's3://somebucket/someobject',
+    }
     #  s3_get_object { '/tmp/imatest':
     #    ensure      => present,
     #    bucket_name => 'somebucket',

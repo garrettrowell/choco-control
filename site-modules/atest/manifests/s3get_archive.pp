@@ -3,8 +3,8 @@
 # A description of what this defined type does
 #
 # @example
-#   atest::s3get { 'namevar': }
-define atest::s3get (
+#   atest::s3get_archive { 'namevar': }
+define atest::s3get_archive (
   Enum['absent','present'] $ensure = 'present',
   String[1] $bucket_name = undef,
   String[1] $bucket_file = undef,
