@@ -5,7 +5,7 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
     begin
       output = aws(['s3', 'sync', bucket, localpath, '--exact-timestamps', '--cli-connect-timeout', connect_timeout, '--region', region, '--dryrun'])
     rescue Puppet::ExecutionFailure => e
-      Puppet.warn("Failed to run s3 sync -> #{e.inspect}")
+      Puppet.info("Failed to run s3 sync -> #{e.inspect}")
       return nil
     end
     to_sync = output.split("\n").sort
@@ -17,7 +17,7 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
     begin
       aws(['s3', 'sync', bucket, localpath, '--exact-timestamps', '--cli-connect-timeout', connect_timeout, '--region', region])
     rescue Puppet::ExecutionFailure => e
-      Puppet.warn("Failed to run s3 sync -> #{e.inspect}")
+      Puppet.info("Failed to run s3 sync -> #{e.inspect}")
     end
   end
 
