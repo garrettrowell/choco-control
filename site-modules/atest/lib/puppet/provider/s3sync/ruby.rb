@@ -30,13 +30,14 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
   end
 
   def exists?
-    if File.directory?(resource[:localpath])
-      # If the directory exists we need to check if what we have locally is insync with whats in the bucket
+    if File.directory?(resource[:localpath]) || File.exist?(resource[:localpath])
+      # If the directory or file exists we need to check if what we have locally is insync with whats in the bucket
       # if dry_run returns an empty array, we are in sync
       result = dry_run(resource[:bucket], resource[:localpath], resource[:connect_timeout], resource[:region]).empty?
-      Puppet.info(".exists? result: #{result}")
+      Puppet.info(".exists? dry_run result: #{result}")
       result
     else
+      Puppet.info('.exists? file/dir not there')
       false
     end
   end
@@ -47,8 +48,13 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
   end
 
   def destroy
-    Puppet.info('destroy currently not implemented')
     Puppet.info("Going to cleanup #{resource[:localpath]}")
-    FileUtils.remove_dir(resource[:localpath])
+    if File.directory?(resource[:localpath])
+      FileUtils.remove_dir(resource[:localpath])
+    elsif File.exist?(resource[:localpath])
+      FileUtils.rm(resource[:localpath])
+    else
+      Puppet.err("Why was .destroy called when #{resource[:localpath]} does not exist...")
+    end
   end
 end
