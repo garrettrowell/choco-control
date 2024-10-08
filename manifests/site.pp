@@ -41,7 +41,7 @@ if $facts['os']['family'] == 'windows' {
 ## Node Definitions ##
 
 node default {
-  include awss3
+  #include awss3
   if $facts['os']['family'] == 'windows' {
 
     $proxy          = 'http://172.31.64.151:3128'
@@ -82,11 +82,11 @@ node default {
       ensure  => installed,
     }
   } else {
-    s3_get_object { '/tmp/imatest':
-      ensure      => present,
-      bucket_name => 'somebucket',
-      object_key  => 'some_object'
-    }
+    #  s3_get_object { '/tmp/imatest':
+    #    ensure      => present,
+    #    bucket_name => 'somebucket',
+    #    object_key  => 'some_object'
+    #  }
     #    $tree = dirtree('/tmp/does/not/exist')
     #    notify { "${tree}": }
     #
