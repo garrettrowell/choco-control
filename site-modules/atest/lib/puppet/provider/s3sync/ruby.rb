@@ -2,9 +2,12 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
   commands :aws => 'aws'
 
   def dry_run(bucket, localpath, connect_timeout, region)
-    override = 'true'
-    if override.eql? 'true'
+    override = 'empty'
+    case override
+    when 'sync_needed'
       output = "(dryrun) download: #{bucket}/some.rpm to #{localpath}/some.rpm"
+    when 'empty'
+      output = ''
     else
       begin
         output = aws(['s3', 'sync', bucket, localpath, '--exact-timestamps', '--cli-connect-timeout', connect_timeout, '--region', region, '--dryrun'])
@@ -37,6 +40,7 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
   end
 
   def destroy
-    Puppet.debug('destroy currently not implemented')
+    Puppet.info('destroy currently not implemented')
+    Puppet.info("Going to cleanup #{resource[:localpath]}")
   end
 end
