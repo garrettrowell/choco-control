@@ -1,7 +1,17 @@
 Puppet::Type.newtype(:s3sync) do
   desc "Puppet type for awscli 's3 sync' command"
 
-  ensurable
+  ensurable do
+    newvalue(:present) do
+      provider.create
+    end
+
+    newvalue(:absent) do
+      provider.destroy
+    end
+
+    defaultto :present
+  end
 
   newparam(:localpath, :namevar => true) do
     desc "Local path to sync a s3 bucket to"
