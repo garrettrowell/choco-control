@@ -12,8 +12,9 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
       begin
         output = aws(['s3', 'sync', bucket, localpath, '--exact-timestamps', '--cli-connect-timeout', connect_timeout, '--region', region, '--dryrun'])
       rescue Puppet::ExecutionFailure => e
-        Puppet.err(e.message)
-        return nil
+        raise e
+        #Puppet.err(e.message)
+        #return nil
       end
     end
     to_sync = output.split("\n").sort
