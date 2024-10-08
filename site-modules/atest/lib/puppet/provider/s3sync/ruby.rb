@@ -31,7 +31,8 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
 
   def exists?
     # if dry_run returns an empty array, we are in sync
-    dry_run(resource[:bucket], resource[:localpath], resource[:connect_timeout], resource[:region]).empty?
+    result = dry_run(resource[:bucket], resource[:localpath], resource[:connect_timeout], resource[:region]).empty?
+    Puppet.info(".exists? result: #{result}")
   end
 
   def create
@@ -42,5 +43,6 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
   def destroy
     Puppet.info('destroy currently not implemented')
     Puppet.info("Going to cleanup #{resource[:localpath]}")
+    FileUtils.remove_dir(resource[:localpath])
   end
 end
