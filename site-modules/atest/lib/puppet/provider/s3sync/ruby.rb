@@ -30,9 +30,15 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
   end
 
   def exists?
-    # if dry_run returns an empty array, we are in sync
-    result = dry_run(resource[:bucket], resource[:localpath], resource[:connect_timeout], resource[:region]).empty?
-    Puppet.info(".exists? result: #{result}")
+    if File.directory?(resource[:localpath])
+      # If the directory exists we need to check if what we have locally is insync with whats in the bucket
+      # if dry_run returns an empty array, we are in sync
+      result = dry_run(resource[:bucket], resource[:localpath], resource[:connect_timeout], resource[:region]).empty?
+      Puppet.info(".exists? result: #{result}")
+      result
+    else
+      false
+    end
   end
 
   def create
