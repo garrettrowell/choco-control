@@ -16,11 +16,11 @@ Puppet::Type.newtype(:s3sync) do
   newparam(:localpath, :namevar => true) do
     desc "Local path to sync a s3 bucket to"
 
-    def insync?(is)
-      Puppet.info 'in insync'
-      provider.dry_run.empty?
-      super(is)
-    end
+#    def insync?(is)
+#      Puppet.info 'in insync'
+#      provider.dry_run.empty?
+#      super(is)
+#    end
   end
 
   newparam(:bucket) do
