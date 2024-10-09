@@ -39,8 +39,6 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
   end
 
   def exists?
-#    Puppet.info "is: #{is}"
-    Puppet.info "should: #{should}"
     if File.directory?(resource[:localpath]) || File.exist?(resource[:localpath])
       # If the directory or file exists we need to check if what we have locally is insync with whats in the bucket
       # if dry_run returns an empty array, we are in sync
