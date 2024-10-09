@@ -21,15 +21,7 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
 
   def do_sync(bucket, localpath, connect_timeout, region)
     # This raises a Puppet::ExecutionFailure Puppet.err unless the command returns an exitcode 0
-    begin
-      aws(['s3', 'sync', bucket, localpath, '--exact-timestamps', '--cli-connect-timeout', connect_timeout, '--region', region])
-    rescue Puppet::ExecutionFailure => e
-      self.fail e.message
-      Puppet.info e.inspect
-#      Puppet.err(e.inspect)
-#      self.fail e.inspect
-#      return nil
-    end
+    aws(['s3', 'sync', bucket, localpath, '--exact-timestamps', '--cli-connect-timeout', connect_timeout, '--region', region])
   end
 
   def exists?
@@ -43,6 +35,14 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
       Puppet.info('.exists? file/dir not there')
       false
     end
+  end
+
+  def localpath
+    self.exists?
+  end
+
+  def localpath=(value)
+    self.create
   end
 
   def create
