@@ -3,28 +3,7 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
 
   mk_resource_methods
 
-#  def initialize(value={})
-#    super(value)
-#    @property_flush = {}
-#  end
-#
-#  def self.instances
-#    Puppet.info "resource_name: #{resource[:name]}"
-#  end
-#
-#  def create
-#    @property_flush[:ensure] = :present
-#  end
-#
-#  def exists?
-#    @property_hash[:ensure] = :present
-#  end
-#
-#  def destroy
-#    @property_hash[:ensure] = :absent
-#  end
   def dry_run(bucket, localpath, connect_timeout, region)
-#    override = 'multi_sync'
     case Facter.value('s3sync_dryrun_override')
     when 'sync_needed'
       output = "(dryrun) download: #{bucket}/some.rpm to #{localpath}/some.rpm"
@@ -43,7 +22,11 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
 
   def do_sync(bucket, localpath, connect_timeout, region)
     # This raises a Puppet::ExecutionFailure Puppet.err unless the command returns an exitcode 0
-    aws(['s3', 'sync', bucket, localpath, '--exact-timestamps', '--cli-connect-timeout', connect_timeout, '--region', region])
+    begin
+      aws(['s3', 'sync', bucket, localpath, '--exact-timestamps', '--cli-connect-timeout', connect_timeout, '--region', region])
+    rescue Puppet::ExecutionFailure => detail
+      raise Puppet::Error, "Failed to s3sync on #{resource[:name]}: #{detail}", detail.backtrace
+    end
   end
 
   def exists?
