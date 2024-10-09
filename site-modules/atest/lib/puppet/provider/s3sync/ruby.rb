@@ -11,16 +11,16 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
     ]
   end
 
-  def dry_run(bucket, localpath, connect_timeout, region)
+  def dry_run
     case Facter.value('s3sync_dryrun_override')
     when 'sync_needed'
-      output = "(dryrun) download: #{bucket}/some.rpm to #{localpath}/some.rpm"
+      output = "(dryrun) download: #{resource[:bucket]}/some.rpm to #{resource[:localpath]}/some.rpm"
     when 'multi_sync'
-      output = "(dryrun) download: #{bucket}/some.rpm to #{localpath}/some.rpm\n(dryrun) download: #{bucket}/another.rpm to #{localpath}/another.rpm"
+      output = "(dryrun) download: #{resource[:bucket]}/some.rpm to #{resource[:localpath]}/some.rpm\n(dryrun) download: #{resource[:bucket]}/another.rpm to #{resource[:localpath]}/another.rpm"
     when 'empty'
       output = ''
     else
-      output = aws(['s3', 'sync', bucket, localpath, '--exact-timestamps', '--cli-connect-timeout', connect_timeout, '--region', region, '--dryrun'])
+      output = aws(default_s3_sync_cmd.append('--dryrun'))
     end
     to_sync = output.split("\n").sort
     Puppet.info("to_sync: #{to_sync.inspect}")
@@ -28,11 +28,11 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
     to_sync
   end
 
-  def do_sync(bucket, localpath, connect_timeout, region)
+  def do_sync
     Puppet.info "cmd: #{default_s3sync_cmd.inspect}"
     # This raises a Puppet::ExecutionFailure Puppet.err unless the command returns an exitcode 0
     begin
-      aws(['s3', 'sync', bucket, localpath, '--exact-timestamps', '--cli-connect-timeout', connect_timeout, '--region', region])
+      aws(default_s3sync_cmd)
     rescue Puppet::ExecutionFailure => detail
       raise Puppet::Error, "Failed to sync #{resource[:localpath]} to #{resource[:name]}: #{detail}", detail.backtrace
     end
@@ -42,7 +42,7 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
     if File.directory?(resource[:localpath]) || File.exist?(resource[:localpath])
       # If the directory or file exists we need to check if what we have locally is insync with whats in the bucket
       # if dry_run returns an empty array, we are in sync
-      result = dry_run(resource[:bucket], resource[:localpath], resource[:connect_timeout], resource[:region]).empty?
+      result = dry_run.empty?
       Puppet.info(".exists? dry_run result: #{result}")
       result
     else
@@ -53,7 +53,7 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
 
   def create
     Puppet.info('in create')
-    do_sync(resource[:bucket], resource[:localpath], resource[:connect_timeout], resource[:region])
+    do_sync
   end
 
   def destroy
