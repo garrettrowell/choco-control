@@ -20,7 +20,7 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
     when 'empty'
       output = ''
     else
-      output = aws(default_s3_sync_cmd.append('--dryrun'))
+      output = aws(default_s3sync_cmd.append('--dryrun'))
     end
     to_sync = output.split("\n").sort
     Puppet.info("to_sync: #{to_sync.inspect}")
