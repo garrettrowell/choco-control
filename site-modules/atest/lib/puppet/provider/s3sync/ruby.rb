@@ -11,6 +11,18 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
   def self.instances
     Puppet.info "resource_name: #{resource[:name]}"
   end
+
+  def create
+    @property_flush[:ensure] = :present
+  end
+
+  def exists?
+    @property_hash[:ensure] = :present
+  end
+
+  def destroy
+    @property_hash[:ensure] = :absent
+  end
 #  def dry_run(bucket, localpath, connect_timeout, region)
 #    override = 'multi_sync'
 #    case override
