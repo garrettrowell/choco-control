@@ -13,7 +13,7 @@ Puppet::Type.newtype(:s3sync) do
     defaultto :present
   end
 
-  newproperty(:localpath, :namevar => true) do
+  newpparam(:localpath, :namevar => true) do
     desc "Local path to sync a s3 bucket to"
 
 #    def insync?(is)
