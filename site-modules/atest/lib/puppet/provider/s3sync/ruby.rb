@@ -3,6 +3,14 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
 
   mk_resource_methods
 
+  # return an array of default arguments to pass to the aws command to perform the s3sync
+  def default_s3sync_cmd
+    [
+      's3', 'sync', resource[:bucket], resource[:localpath], '--cli-connect-timeout', resource[:connect_timeout],
+      '--region', resource[:region]
+    ]
+  end
+
   def dry_run(bucket, localpath, connect_timeout, region)
     case Facter.value('s3sync_dryrun_override')
     when 'sync_needed'
@@ -21,12 +29,12 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
   end
 
   def do_sync(bucket, localpath, connect_timeout, region)
+    Puppet.info "cmd: #{defauld_s3sync_cmd.inspect}"
     # This raises a Puppet::ExecutionFailure Puppet.err unless the command returns an exitcode 0
     begin
       aws(['s3', 'sync', bucket, localpath, '--exact-timestamps', '--cli-connect-timeout', connect_timeout, '--region', region])
     rescue Puppet::ExecutionFailure => detail
-      Puppet.info "backtrace: #{detail.backtrace}"
-      raise Puppet::Error, "Failed to s3sync on #{resource[:name]}: #{detail}", detail.backtrace
+      raise Puppet::Error, "Failed to sync #{resource[:localpath]} to #{resource[:name]}: #{detail}", detail.backtrace
     end
   end
 
