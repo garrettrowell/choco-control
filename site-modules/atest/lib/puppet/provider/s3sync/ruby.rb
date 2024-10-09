@@ -25,7 +25,8 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
       aws(['s3', 'sync', bucket, localpath, '--exact-timestamps', '--cli-connect-timeout', connect_timeout, '--region', region])
     rescue Puppet::ExecutionFailure => e
       Puppet.err(e.inspect)
-      return nil
+      self.fail
+#      return nil
     end
   end
 
