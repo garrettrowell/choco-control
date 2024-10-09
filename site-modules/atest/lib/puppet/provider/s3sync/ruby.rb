@@ -21,7 +21,12 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
 
   def do_sync(bucket, localpath, connect_timeout, region)
     # This raises a Puppet::ExecutionFailure Puppet.err unless the command returns an exitcode 0
-    aws(['s3', 'sync', bucket, localpath, '--exact-timestamps', '--cli-connect-timeout', connect_timeout, '--region', region])
+    begin
+      aws(['s3', 'sync', bucket, localpath, '--exact-timestamps', '--cli-connect-timeout', connect_timeout, '--region', region])
+    rescue Puppet::ExecutionFailure => e
+      Puppet.err(e.inspect)
+      return nil
+    end
   end
 
   def exists?
