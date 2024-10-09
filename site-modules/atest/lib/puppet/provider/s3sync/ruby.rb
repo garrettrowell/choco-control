@@ -29,7 +29,7 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
   end
 
   def do_sync(bucket, localpath, connect_timeout, region)
-    Puppet.info "cmd: #{defauld_s3sync_cmd.inspect}"
+    Puppet.info "cmd: #{default_s3sync_cmd.inspect}"
     # This raises a Puppet::ExecutionFailure Puppet.err unless the command returns an exitcode 0
     begin
       aws(['s3', 'sync', bucket, localpath, '--exact-timestamps', '--cli-connect-timeout', connect_timeout, '--region', region])
