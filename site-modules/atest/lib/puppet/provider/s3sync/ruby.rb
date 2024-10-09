@@ -38,10 +38,12 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
   end
 
   def localpath
+    Puppet.info('in localpath getter')
     self.exists?
   end
 
   def localpath=(value)
+    Puppet.info('in localpath setter')
     self.create
   end
 
