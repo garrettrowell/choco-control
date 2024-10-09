@@ -1,6 +1,8 @@
 Puppet::Type.type(:s3sync).provide(:ruby) do
   commands :aws => 'aws'
 
+  mk_resource_methods
+
   def dry_run(bucket, localpath, connect_timeout, region)
     override = 'multi_sync'
     case override
@@ -28,28 +30,27 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
     if File.directory?(resource[:localpath]) || File.exist?(resource[:localpath])
       # If the directory or file exists we need to check if what we have locally is insync with whats in the bucket
       # if dry_run returns an empty array, we are in sync
-#      result = dry_run(resource[:bucket], resource[:localpath], resource[:connect_timeout], resource[:region]).empty?
-#      Puppet.info(".exists? dry_run result: #{result}")
-#      result
-      true
+      result = dry_run(resource[:bucket], resource[:localpath], resource[:connect_timeout], resource[:region]).empty?
+      Puppet.info(".exists? dry_run result: #{result}")
+      result
     else
       Puppet.info('.exists? file/dir not there')
       false
     end
   end
 
-  def localpath
-    Puppet.info('in localpath getter')
-    result = dry_run(resource[:bucket], resource[:localpath], resource[:connect_timeout], resource[:region]).empty?
-    Puppet.info(".exists? dry_run result: #{result}")
-    result
-#    self.exists?
-  end
-
-  def localpath=(value)
-    Puppet.info('in localpath setter')
-    self.create
-  end
+#  def localpath
+#    Puppet.info('in localpath getter')
+#    result = dry_run(resource[:bucket], resource[:localpath], resource[:connect_timeout], resource[:region]).empty?
+#    Puppet.info(".exists? dry_run result: #{result}")
+#    result
+##    self.exists?
+#  end
+#
+#  def localpath=(value)
+#    Puppet.info('in localpath setter')
+#    self.create
+#  end
 
   def create
     Puppet.info('in create')
