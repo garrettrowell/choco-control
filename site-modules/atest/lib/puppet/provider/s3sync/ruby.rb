@@ -2,16 +2,19 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
   commands :aws => 'aws'
 
   def dry_run(bucket, localpath, connect_timeout, region)
-    override = 'empty'
+    override = 'multi_sync'
     case override
     when 'sync_needed'
       output = "(dryrun) download: #{bucket}/some.rpm to #{localpath}/some.rpm"
+    when 'multi_sync'
+      output = "(dryrun) download: #{bucket}/some.rpm to #{localpath}/some.rpm\n(dryrun) download: #{bucket}/another.rpm to #{localpath}/another.rpm"
     when 'empty'
       output = ''
     else
       output = aws(['s3', 'sync', bucket, localpath, '--exact-timestamps', '--cli-connect-timeout', connect_timeout, '--region', region, '--dryrun'])
     end
     to_sync = output.split("\n").sort
+    Puppet.info("to_sync: #{to_sync.inspect}")
     # likely need more logic here
     to_sync
   end
