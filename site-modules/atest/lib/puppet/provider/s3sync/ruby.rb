@@ -53,7 +53,11 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
 
   def create
     Puppet.info('in create')
+    begin
     do_sync
+    rescue Puppet::Error => e
+      self.fail e
+    end
   end
 
   def destroy
