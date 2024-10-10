@@ -12,19 +12,27 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
   end
 
   def dry_run
-    case Facter.value('s3sync_dryrun_override')
-    when 'sync_needed'
-      output = "(dryrun) download: #{resource[:bucket]}/some.rpm to #{resource[:localpath]}/some.rpm"
-    when 'multi_sync'
-      output = "(dryrun) download: #{resource[:bucket]}/some.rpm to #{resource[:localpath]}/some.rpm\n(dryrun) download: #{resource[:bucket]}/another.rpm to #{resource[:localpath]}/another.rpm"
-    when 'empty'
-      output = ''
-    else
-      output = aws(default_s3sync_cmd.append('--dryrun'))
+    begin
+      case Facter.value('s3sync_dryrun_override')
+      when 'sync'
+        # one file was found to either not exist or be out of sync
+        output = "(dryrun) download: #{resource[:bucket]}/some.rpm to #{resource[:localpath]}/some.rpm"
+      when 'multi_sync'
+        # same as 'sync' just with two
+        output = "(dryrun) download: #{resource[:bucket]}/some.rpm to #{resource[:localpath]}/some.rpm\n(dryrun) download: #{resource[:bucket]}/another.rpm to #{resource[:localpath]}/another.rpm"
+      when 'empty'
+        # the dryrun command returns no output if the localfilepath is in sync
+        output = ''
+      else
+        # actually run the command instead of stubbing out scenarios
+        output = aws(default_s3sync_cmd.append('--dryrun'))
+      end
+    rescue Puppet::ExecutionFailure => detail
+      raise Puppet::Error, "Failed to check if #{resource[:localpath]} is in-sync with  #{resource[:bucket]}: #{detail}", detail.backtrace
     end
+
     to_sync = output.split("\n").sort
-    Puppet.info("to_sync: #{to_sync.inspect}")
-    # likely need more logic here
+    Puppet.debug(".dry_run to_sync: #{to_sync.inspect}")
     to_sync
   end
 
@@ -43,23 +51,22 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
       # If the directory or file exists we need to check if what we have locally is insync with whats in the bucket
       # if dry_run returns an empty array, we are in sync
       result = dry_run.empty?
-      Puppet.info(".exists? dry_run result: #{result}")
+      Puppet.debug(".exists? dry_run result: #{result}")
       result
-#      true
     else
-      Puppet.info('.exists? file/dir not there')
+      Puppet.debug('.exists? file/dir not there')
       false
     end
   end
 
   def create
-    Puppet.info('in create')
     do_sync
   end
 
   def destroy
-    Puppet.info("Going to cleanup #{resource[:localpath]}")
+    Puppet.debug("Cleaning up: #{resource[:localpath]}")
     if File.directory?(resource[:localpath])
+      Dir[ File.join(resource[:localpath], '**', '*') ].each { |f| Puppet.debug("Removing: #{f}") }
       FileUtils.remove_dir(resource[:localpath])
     elsif File.exist?(resource[:localpath])
       FileUtils.rm(resource[:localpath])
@@ -67,14 +74,4 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
       Puppet.err("Why was .destroy called when #{resource[:localpath]} does not exist...")
     end
   end
-
-#  def localpath
-#    Puppet.info 'in .localpath getter'
-#    dry_run
-#  end
-#
-#  def localpath=(value)
-#    Puppet.info 'in .localpath setter'
-#    do_sync
-#  end
 end
