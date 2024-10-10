@@ -40,6 +40,14 @@ Puppet::Type.newtype(:s3sync) do
 
   newproperty(:insync) do
     desc 'Whether the bucket contents match the local copy (readonly)'
-    provider.dry_run.empty?
+    newvalue(:true) do
+      provider.dry_run.empty?
+    end
+
+    newvalue(:false) do
+      provider.do_sync
+    end
+
+    defaultto :false
   end
 end
