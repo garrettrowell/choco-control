@@ -1,10 +1,9 @@
 Puppet::Type.newtype(:s3sync) do
   desc 'Puppet type for `aws s3 sync` subcommand'
 
-#  newproperty(:ensure) do
   ensurable do
     newvalue(:present) do
-      provider.create unless provider.exists?
+      provider.create
     end
 
     newvalue(:absent) do
@@ -16,12 +15,6 @@ Puppet::Type.newtype(:s3sync) do
 
   newparam(:localpath, :namevar => true) do
     desc 'Local path to sync a s3 bucket to'
-
-#    def insync?(is)
-#      Puppet.info 'in insync'
-#      provider.dry_run.empty?
-#      super(is)
-#    end
   end
 
   newparam(:bucket) do
@@ -36,18 +29,5 @@ Puppet::Type.newtype(:s3sync) do
   newparam(:connect_timeout) do
     desc 'maximum socket connect time in seconds'
     defaultto '0'
-  end
-
-  newproperty(:insync) do
-    desc 'Whether the bucket contents match the local copy (readonly)'
-    newvalue(:true) do
-      provider.dry_run.empty?
-    end
-
-    newvalue(:false) do
-      provider.do_sync
-    end
-
-    defaultto :false
   end
 end

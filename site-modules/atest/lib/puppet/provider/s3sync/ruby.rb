@@ -1,7 +1,7 @@
 Puppet::Type.type(:s3sync).provide(:ruby) do
   commands :aws => 'aws'
 
-  mk_resource_methods
+#  mk_resource_methods
 
   # return an array of default arguments to pass to the aws command to perform the s3sync
   def default_s3sync_cmd
@@ -51,12 +51,11 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
       # Only run the dry_run when ensuring present. If we're ensuring absent... we've already determined it's here
       # If the directory or file exists we need to check if what we have locally is insync with whats in the bucket
       # if dry_run returns an empty array, we are in sync
-#      Puppet.info "resource: #{resource[:ensure].inspect}"
-##      result = dry_run.empty?
-#      result = resource[:ensure] == :present ? dry_run.empty? : true
-#      Puppet.info(".exists? result: #{result}")
-#      result
-      true
+      Puppet.info "resource: #{resource[:ensure].inspect}"
+#      result = dry_run.empty?
+      result = resource[:ensure] == :present ? dry_run.empty? : true
+      Puppet.info(".exists? result: #{result}")
+      result
     else
       Puppet.info('.exists? file/dir not there')
       false
