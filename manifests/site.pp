@@ -83,10 +83,17 @@ node default {
     }
   } else {
     s3sync { 'atest':
-      #      ensure    => absent,
+      ensure    => absent,
       localpath => '/tmp/imatest',
       bucket    => 's3://somebucket/someobject',
     }
+
+    s3sync { 'another':
+      #      ensure    => absent,
+      localpath => '/tmp/another',
+      bucket    => 's3://somebucket/foo',
+    }
+
     #  s3_get_object { '/tmp/imatest':
     #    ensure      => present,
     #    bucket_name => 'somebucket',
