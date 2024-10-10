@@ -1,7 +1,8 @@
 Puppet::Type.newtype(:s3sync) do
   desc 'Puppet type for `aws s3 sync` subcommand'
 
-  newproperty(:ensure) do
+#  newproperty(:ensure) do
+  ensurable do
     newvalue(:present) do
       provider.create
     end
