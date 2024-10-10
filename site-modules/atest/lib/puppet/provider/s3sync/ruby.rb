@@ -32,7 +32,7 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
     end
 
     to_sync = output.split("\n").sort
-    Puppet.debug(".dry_run to_sync: #{to_sync.inspect}")
+    Puppet.info(".dry_run to_sync: #{to_sync.inspect}")
     to_sync
   end
 
@@ -51,10 +51,10 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
       # If the directory or file exists we need to check if what we have locally is insync with whats in the bucket
       # if dry_run returns an empty array, we are in sync
       result = dry_run.empty?
-      Puppet.debug(".exists? dry_run result: #{result}")
+      Puppet.info(".exists? dry_run result: #{result}")
       result
     else
-      Puppet.debug('.exists? file/dir not there')
+      Puppet.info('.exists? file/dir not there')
       false
     end
   end
@@ -66,7 +66,7 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
   def destroy
     Puppet.debug("Cleaning up: #{resource[:localpath]}")
     if File.directory?(resource[:localpath])
-      Dir[ File.join(resource[:localpath], '**', '*') ].each { |f| Puppet.debug("Removing: #{f}") }
+      Dir[ File.join(resource[:localpath], '**', '*') ].each { |f| Puppet.info("Removing: #{f}") }
       FileUtils.remove_dir(resource[:localpath])
     elsif File.exist?(resource[:localpath])
       FileUtils.rm(resource[:localpath])
