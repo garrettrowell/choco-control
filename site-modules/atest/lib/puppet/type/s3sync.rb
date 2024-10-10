@@ -37,4 +37,9 @@ Puppet::Type.newtype(:s3sync) do
     desc 'maximum socket connect time in seconds'
     defaultto '0'
   end
+
+  newproperty(:insync) do
+    desc 'Whether the bucket contents match the local copy (readonly)'
+    provider.dry_run.empty?
+  end
 end
