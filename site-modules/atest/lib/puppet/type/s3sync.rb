@@ -1,7 +1,7 @@
 Puppet::Type.newtype(:s3sync) do
-  desc "Puppet type for awscli 's3 sync' command"
+  desc 'Puppet type for `aws s3 sync` subcommand'
 
-  ensurable do
+  newproperty(:ensure) do
     newvalue(:present) do
       provider.create
     end
@@ -14,7 +14,7 @@ Puppet::Type.newtype(:s3sync) do
   end
 
   newparam(:localpath, :namevar => true) do
-    desc "Local path to sync a s3 bucket to"
+    desc 'Local path to sync a s3 bucket to'
 
 #    def insync?(is)
 #      Puppet.info 'in insync'
@@ -24,16 +24,16 @@ Puppet::Type.newtype(:s3sync) do
   end
 
   newparam(:bucket) do
-    desc "s3 bucket to sync"
+    desc 's3 bucket to sync'
   end
 
   newparam(:region) do
-    desc "region of the s3 bucket"
+    desc 'region of the s3 bucket'
     defaultto 'us-east-2'
   end
 
   newparam(:connect_timeout) do
-    desc "maximum socket connect time in seconds"
+    desc 'maximum socket connect time in seconds'
     defaultto '0'
   end
 end
