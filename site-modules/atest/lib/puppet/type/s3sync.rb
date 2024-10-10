@@ -4,7 +4,7 @@ Puppet::Type.newtype(:s3sync) do
 #  newproperty(:ensure) do
   ensurable do
     newvalue(:present) do
-      provider.create
+      provider.create unless provider.exists?
     end
 
     newvalue(:absent) do
