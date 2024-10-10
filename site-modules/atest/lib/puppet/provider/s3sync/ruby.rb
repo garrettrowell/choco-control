@@ -53,7 +53,7 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
       # if dry_run returns an empty array, we are in sync
       Puppet.info "resource: #{resource[:ensure].inspect}"
       result = dry_run.empty?
-      result = resource[:ensure].to_s.eq('present') ? dry_run.empty? : true
+      result = resource[:ensure] == :present ? dry_run.empty? : true
       Puppet.info(".exists? result: #{result}")
       result
     else
