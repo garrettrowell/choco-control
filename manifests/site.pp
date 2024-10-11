@@ -82,11 +82,11 @@ node default {
       ensure  => installed,
     }
   } else {
-    #    s3sync { 'atest':
-    #      ensure    => absent,
-    #      localpath => '/tmp/imatest',
-    #      bucket    => 's3://somebucket/someobject',
-    #    }
+    s3sync { 'atest':
+      ensure    => absent,
+      localpath => '/tmp/imatest',
+      bucket    => 's3://somebucket/someobject',
+    }
 
     s3sync { 'another':
       #      ensure    => absent,
