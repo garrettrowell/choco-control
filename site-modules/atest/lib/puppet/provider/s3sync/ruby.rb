@@ -54,8 +54,7 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
   end
 
   def exists?
-    Puppet.info "property_hash: #{@property_hash}"
-    Puppet.info "resource: #{@resource}"
+    Puppet.info "resource: #{@resource[:ensure]}"
     Puppet.info "#{self} - ensure => #{resource[:ensure]}"
 
     if File.directory?(resource[:localpath]) || File.exist?(resource[:localpath])
