@@ -1,5 +1,5 @@
 Puppet::Type.type(:s3sync).provide(:ruby) do
-  commands :aws => 'aws'
+  commands aws: 'aws'
 
   #
   # NOTE: In practice all of the calls to 'Puppet.info' should be replaced with 'Puppet.debug'
@@ -21,20 +21,20 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
 
   def dry_run
     begin
-      case Facter.value('s3sync_dryrun_override')
-      when 'sync'
-        # one file was found to either not exist or be out of sync
-        output = "(dryrun) download: #{@resource[:bucket]}/some.rpm to #{@resource[:localpath]}/some.rpm"
-      when 'multi_sync'
-        # same as 'sync' just with two
-        output = "(dryrun) download: #{@resource[:bucket]}/some.rpm to #{@resource[:localpath]}/some.rpm\n(dryrun) download: #{@resource[:bucket]}/another.rpm to #{@resource[:localpath]}/another.rpm"
-      when 'empty'
-        # the dryrun command returns no output if the localfilepath is in sync
-        output = ''
-      else
-        # actually run the command instead of stubbing out scenarios
-        output = aws(default_s3sync_cmd.append('--dryrun'))
-      end
+      output = case Facter.value('s3sync_dryrun_override')
+               when 'sync'
+                 # one file was found to either not exist or be out of sync
+                 "(dryrun) download: #{@resource[:bucket]}/some.rpm to #{@resource[:localpath]}/some.rpm"
+               when 'multi_sync'
+                 # same as 'sync' just with two
+                 "(dryrun) download: #{@resource[:bucket]}/some.rpm to #{@resource[:localpath]}/some.rpm\n(dryrun) download: #{@resource[:bucket]}/another.rpm to #{@resource[:localpath]}/another.rpm"
+               when 'empty'
+                 # the dryrun command returns no output if the localfilepath is in sync
+                 ''
+               else
+                 # actually run the command instead of stubbing out scenarios
+                 aws(default_s3sync_cmd.append('--dryrun'))
+               end
     rescue Puppet::ExecutionFailure => detail
       raise Puppet::Error, "Failed to check if #{@resource[:localpath]} is in-sync with  #{@resource[:bucket]}: #{detail}", detail.backtrace
     end
@@ -46,11 +46,9 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
 
   def do_sync
     # This raises a Puppet::ExecutionFailure Puppet.err unless the command returns an exitcode 0
-    begin
-      aws(default_s3sync_cmd) unless !Facter.value('s3sync_override').nil?
-    rescue Puppet::ExecutionFailure => detail
-      raise Puppet::Error, "Failed to sync #{@resource[:localpath]} to #{@resource[:name]}: #{detail}", detail.backtrace
-    end
+    aws(default_s3sync_cmd) unless !Facter.value('s3sync_override').nil?
+  rescue Puppet::ExecutionFailure => detail
+    raise Puppet::Error, "Failed to sync #{@resource[:localpath]} to #{@resource[:name]}: #{detail}", detail.backtrace
   end
 
   def exists?
@@ -59,7 +57,7 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
       # Only run the dry_run when ensuring present. If we're ensuring absent... we've already determined it's here
       # If the directory or file exists we need to check if what we have locally is insync with whats in the bucket
       # if dry_run returns an empty array, we are in sync
-      result = @resource[:ensure] == :present ? dry_run.empty? : true
+      result = (@resource[:ensure] == :present) ? dry_run.empty? : true
       Puppet.info("#{self} - .exists? result: #{result}")
       result
     else

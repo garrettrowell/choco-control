@@ -13,7 +13,7 @@ Puppet::Type.newtype(:s3sync) do
     defaultto :present
   end
 
-  newparam(:localpath, :namevar => true) do
+  newparam(:localpath, namevar: true) do
     desc 'Local path to sync a s3 bucket to'
   end
 
