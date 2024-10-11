@@ -27,8 +27,8 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
                  "(dryrun) download: #{@resource[:bucket]}/some.rpm to #{@resource[:localpath]}/some.rpm"
                when 'multi_sync'
                  # same as 'sync' just with two
-                 "(dryrun) download: #{@resource[:bucket]}/some.rpm to #{@resource[:localpath]}/some.rpm
-                  (dryrun) download: #{@resource[:bucket]}/another.rpm to #{@resource[:localpath]}/another.rpm"
+                 %{(dryrun) download: #{@resource[:bucket]}/some.rpm to #{@resource[:localpath]}/some.rpm
+                  (dryrun) download: #{@resource[:bucket]}/another.rpm to #{@resource[:localpath]}/another.rpm}
                when 'empty'
                  # the dryrun command returns no output if the localfilepath is in sync
                  ''
