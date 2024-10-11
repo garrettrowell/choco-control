@@ -1,8 +1,6 @@
 Puppet::Type.type(:s3sync).provide(:ruby) do
   commands :aws => 'aws'
 
-#  mk_resource_methods
-
   # return an array of default arguments to pass to the aws command to perform the s3sync
   def default_s3sync_cmd
     [
