@@ -38,7 +38,7 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
     end
 
     to_sync = output.split("\n").sort
-    Puppet.info("#{self} - .dry_run to_sync: #{to_sync.inspect}")
+    Puppet.info("#{self} - .dry_run to_sync: #{to_sync}")
     to_sync
   end
 
@@ -52,12 +52,11 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
   end
 
   def exists?
-    Puppet.info "self #{self.inspect}"
     if File.directory?(resource[:localpath]) || File.exist?(resource[:localpath])
       # Only run the dry_run when ensuring present. If we're ensuring absent... we've already determined it's here
       # If the directory or file exists we need to check if what we have locally is insync with whats in the bucket
       # if dry_run returns an empty array, we are in sync
-      Puppet.info "#{self} - ensure => #{resource[:ensure].inspect}"
+      Puppet.info "#{self} - ensure => #{resource[:ensure]}"
 #      result = dry_run.empty?
       result = resource[:ensure] == :present ? dry_run.empty? : true
       Puppet.info("#{self} - .exists? result: #{result}")
