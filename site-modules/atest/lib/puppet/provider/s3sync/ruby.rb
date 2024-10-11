@@ -9,6 +9,8 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
   #       executing the aws command. While good for validating behavior, it should be removed for actual use.
   #
 
+  mk_resource_methods
+
   # return an array of default arguments to pass to the aws command to perform the s3sync
   def default_s3sync_cmd
     [
@@ -52,6 +54,8 @@ Puppet::Type.type(:s3sync).provide(:ruby) do
   end
 
   def exists?
+    Puppet.info "property_hash: #{@property_hash}"
+    Puppet.info "resource: #{@resource}"
     if File.directory?(resource[:localpath]) || File.exist?(resource[:localpath])
       # Only run the dry_run when ensuring present. If we're ensuring absent... we've already determined it's here
       # If the directory or file exists we need to check if what we have locally is insync with whats in the bucket
